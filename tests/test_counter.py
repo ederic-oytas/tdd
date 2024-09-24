@@ -65,3 +65,19 @@ class TestCounterEndPoints:
     def test_read_not_found(self, client):
         result = client.get('/counters/jaz')
         assert result.status_code == status.HTTP_404_NOT_FOUND
+    
+    def test_delete_a_counter(self, client):
+        result = client.post('/counters/fun')
+        assert result.status_code == status.HTTP_201_CREATED
+        assert result.json['fun'] == 0
+        result = client.get('/counters/fun')
+        assert result.status_code == status.HTTP_200_OK
+        assert result.json['fun'] == 0
+        result = client.delete('/counters/fun')
+        assert result.status_code == status.HTTP_204_NO_CONTENT
+        result = client.get('/counters/fun')
+        assert result.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_delete_not_found(self, client):
+        result = client.delete('/counters/tun')
+        assert result.status_code == status.HTTP_404_NOT_FOUND
